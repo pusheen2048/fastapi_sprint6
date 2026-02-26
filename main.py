@@ -1,15 +1,13 @@
 import asyncio
 import uvicorn
-from fastapi import FastAPI
-from starlette.middleware.cors import CORSMiddleware
-
 from app import create_app
 
-app = create_app() 
+app = create_app()
 
 
-async def run() -> None:
-    config = uvicorn.Config("main:app", host="127.0.0.1", port=8000, reload=False)
+async def run():
+    config = uvicorn.Config("main:app", host="127.0.0.1",
+                            port=8000, reload=False)
     server = uvicorn.Server(config=config)
     tasks = (asyncio.create_task(server.serve()), )
     await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)

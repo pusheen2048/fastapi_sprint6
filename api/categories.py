@@ -7,13 +7,16 @@ categories_router = APIRouter()
 categories = list()
 
 
-@categories_router.get("/", status_code=status.HTTP_200_OK, response_model=list[Category])
+@categories_router.get("/", status_code=status.HTTP_200_OK,
+                       response_model=list[Category])
 async def get_categories():
     return categories
 
 
-@categories_router.get("/{category_id}", status_code=status.HTTP_200_OK, response_model=Category)
-async def get_category(category_id):   
+@categories_router.get("/{category_id}",
+                       status_code=status.HTTP_200_OK,
+                       response_model=Category)
+async def get_category(category_id):
     for category in categories:
         if category.id == category_id:
             return category
@@ -21,7 +24,9 @@ async def get_category(category_id):
                         status_code=status.HTTP_404_NOT_FOUND)
 
 
-@categories_router.post("/add", status_code=status.HTTP_201_CREATED, response_model=Category)
+@categories_router.post("/add",
+                        status_code=status.HTTP_201_CREATED,
+                        response_model=Category)
 async def create_category(title, description, slug, is_published):
     new_category = Category(
         id=len(categories) + 1,
@@ -35,8 +40,9 @@ async def create_category(title, description, slug, is_published):
     return new_category
 
 
-@categories_router.delete("/{category_id}",status_code=status.HTTP_204_NO_CONTENT)
-async def delete_category(category_id:int):
+@categories_router.delete("/{category_id}",
+                          status_code=status.HTTP_204_NO_CONTENT)
+async def delete_category(category_id):
     for idx, category in enumerate(categories, 1):
         if category.id == category_id:
             categories.pop(idx)

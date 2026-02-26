@@ -1,6 +1,7 @@
-import uuid
-from datetime import datetime
 from pydantic import BaseModel, Field
+from uuid import UUID
+from datetime import datetime
+from typing import Optional
 
 
 class Category(BaseModel):
@@ -12,7 +13,7 @@ class Category(BaseModel):
 
 
 class CategoryCreate(Category):
-    author_id: int 
+    author_id: int
 
 
 class CategoryUpdate(BaseModel):
@@ -23,5 +24,5 @@ class CategoryUpdate(BaseModel):
 
 
 class CategoryResponse(Category):
-    id: uuid.UUID
+    id: UUID
     created_at: datetime
