@@ -1,36 +1,26 @@
-from fastapi import APIRouter, status, HTTPException
+from fastapi import APIRouter, status, Depends
+from schemas.users import UserResponse, UserCreate, UserBase
+from domain.user.use_cases.get_user_by_username import GetUserByUsernameUseCase
+from domain.user.use_cases.create_user import CreateUserUseCase
+from api.depends import get_user_by_username_use_case, create_user_use_case
 
-from schemas.users import User
-
-users_router = APIRouter()
-users = list()
-
-
-@users_router.get("/", status_code=status.HTTP_200_OK,
-                  response_model=list[User])
-async def get_users():
-    return users
+user_router = APIRouter()
 
 
-@users_router.get("/{user_id}", status_code=status.HTTP_200_OK,
-                  response_model=User)
-async def get_user(user_id):
-    for user in users:
-        if user.id == user_id:
-            return user
-    raise HTTPException(detail="Пользователь не найден",
-                        status_code=status.HTTP_404_NOT_FOUND)
+@user_router.get("/user/{username}", status_code=status.HTTP_200_OK, response_model=UserResponse)
+async def get_user_by_username(
+    username: str,
+    use_case: GetUserByUsernameUseCase = Depends(
+        get_user_by_username_use_case)
+):
+    user = await use_case.execute(username=username)
+    return user
 
 
-@users_router.post("/add", status_code=status.HTTP_201_CREATED,
-                   response_model=User)
-async def create_user(login, email, password,
-                      first_name=None, second_name=None):
-    new_user = User(id=len(users) + 1,
-                    login=login,
-                    email=email,
-                    password=password,
-                    first_name=first_name,
-                    second_name=second_name)
-    users.append(new_user)
-    return new_user
+@user_router.post("/user", status_code=status.HTTP_200_OK, response_model=UserResponse)
+async def create_user(
+    data: UserCreate,
+    use_case: CreateUserUseCase = Depends(create_user_use_case)
+) -> UserBase:
+    return await use_case.execute(data)
+
