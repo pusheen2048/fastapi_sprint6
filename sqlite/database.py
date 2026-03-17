@@ -12,10 +12,8 @@ class Database:
     @contextmanager
     def session(self):
         connection = self._engine.connect()
-
         Session = sessionmaker(bind=self._engine)
         session = Session()
-
         try:
             yield session
             session.commit()

@@ -1,7 +1,7 @@
-from sqlite.database import database, Base
-
 import asyncio
 import uvicorn
+
+from sqlite.database import database, Base
 from app import create_app
 
 app = create_app()
@@ -9,7 +9,6 @@ app = create_app()
 
 @app.on_event("startup")
 def startup():
-    from sqlite.models import users
     Base.metadata.create_all(bind=database._engine)
 
 

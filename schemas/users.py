@@ -1,4 +1,3 @@
-from pydantic import BaseModel, EmailStr, Field
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
 from datetime import datetime
 from typing import Optional
@@ -12,7 +11,7 @@ class UserBase(BaseModel):
 
 
 class UserCreate(UserBase):
-    password: str = Field(min_length=8, max_length=256)
+    password: str = Field(min_length=8, max_length=256, description='Пароль')
     model_config = ConfigDict(from_attributes=True)
 
 

@@ -1,28 +1,18 @@
 from pydantic import BaseModel, Field
-from uuid import UUID
 from datetime import datetime
-from typing import Optional
 
 
-class Category(BaseModel):
+class CategoryBase(BaseModel):
     title: str = Field(max_length=256, description='Заголовок')
     description: str = Field(description='Описание')
-    slug: str = Field(description='Идентификатор страницы для URL')
-    is_published: bool = Field(True, description='Опубликовано')
-    created_at: datetime = Field(description='Добавлено')
+    slug: str = Field(max_length=64, description='Идентификатор страницы для URL')
+    is_published: bool = Field(default=True, description='Опубликовано')
 
 
-class CategoryCreate(Category):
-    author_id: int
+class CategoryCreate(CategoryBase):
+    pass
 
 
-class CategoryUpdate(BaseModel):
-    title: Optional[str] = Field(default=None, max_length=256)
-    description: Optional[str]
-    slug: Optional[str]
-    is_published: Optional[bool]
-
-
-class CategoryResponse(Category):
-    id: UUID
+class CategoryResponse(CategoryBase):
+    id: int
     created_at: datetime

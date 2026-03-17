@@ -6,25 +6,16 @@ from .users import User
 
 
 class LocationBase(BaseModel):
-    title: str = Field(max_length=256)
-    description: str
-    is_published: bool
+    title: str = Field(max_length=256, description='Заголовок')
+    description: str = Field(description='Описание')
+    is_published: bool = Field(default=True, description='Опубликовано')
 
 
 class LocationCreate(LocationBase):
     author_id: int
 
 
-class LocationUpdate(BaseModel):
-    title: Optional[str] = Field(max_length=256)
-    description: Optional[str]
-    is_published: Optional[bool]
-
-
-class Location(BaseModel):
+class LocationResponse(LocationBase):
     id: int
     author: User
-    title: str = Field(max_length=256)
-    description: str
-    is_published: bool
     created_at: datetime

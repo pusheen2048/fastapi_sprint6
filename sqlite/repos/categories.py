@@ -1,27 +1,23 @@
-import uuid
-from typing import Optional
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-from models.categories import Category
-from repositories.base import BaseRepository
+from typing import Type, Optional
+from sqlalchemy.orm import Session
+
+from sqlite.models.users import Category
 
 
-class CategoryRepository(BaseRepository[Category]):
-    def __init__(self, session: AsyncSession):
-        super().__init__(Category, session)
+class CategoryRepository:
+    def __init__(self):
+        self._model = Category
 
-    async def get_by_title(self, title: str) -> Optional[Category]:
-        query = select(Category).where(Category.title == title)
-        result = await self.session.execute(query)
-        return result.scalar_one_or_none()
+    def get_by_title(self, session, title):
+        query = (session.query(self._model)
+                 .where(self._model.title == title))
+        return query.scalar()
 
-    async def get_by_id(self, id: uuid.UUID) -> Optional[Category]:
-        query = select(Category).where(Category.id == id)
-        result = await self.session.execute(query)
-        return result.scalar_one_or_none()
+    def get_by_id(self, session, category_id):
+        return (session.query(self._model)
+                .where(self._model.id == category_id)).scalar()
 
-    async def does_category_exist(self, title: str) -> bool:
-        query = select(Category).where(
-            Category.title == title)
-        result = await self.session.execute(query)
-        return result.scalar_one_or_none() is not None
+    def create(self, session, category):
+        session.add(category)
+        session.flush()
+        return category
