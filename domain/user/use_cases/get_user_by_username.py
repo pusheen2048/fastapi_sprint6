@@ -20,5 +20,4 @@ class GetUserByUsernameUseCase:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"User with username '{username}' not found"
             )
-
         return UserResponse.model_validate(obj=user)

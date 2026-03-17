@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import func, ForeignKey
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 
 from sqlite.database import Base

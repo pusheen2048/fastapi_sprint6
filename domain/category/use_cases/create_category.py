@@ -1,4 +1,3 @@
-from fastapi import HTTPException, status
 from datetime import datetime
 
 from sqlite.repos.categories import CategoryRepository
@@ -19,6 +18,6 @@ class CreateCategoryUseCase:
                                 is_published=data.is_published,
                                 slug=data.slug,
                                 created_at=datetime.now())
-            
             created = self._repo.create(session, category)
-            return CategoryResponse.model_validate(created, from_attributes=True)
+            return CategoryResponse.model_validate(created,
+                                                   from_attributes=True)

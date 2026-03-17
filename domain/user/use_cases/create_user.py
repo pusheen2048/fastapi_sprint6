@@ -18,7 +18,6 @@ class CreateUserUseCase:
             if exists:
                 raise HTTPException(status_code=status.HTTP_409_CONFLICT,
                                     detail="This username already exists")
-
             user = User(first_name=data.first_name,
                         last_name=data.last_name,
                         username=data.username,

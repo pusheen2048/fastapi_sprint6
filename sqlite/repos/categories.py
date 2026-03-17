@@ -1,6 +1,3 @@
-from typing import Type, Optional
-from sqlalchemy.orm import Session
-
 from sqlite.models.categories import Category
 
 

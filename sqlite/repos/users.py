@@ -1,6 +1,3 @@
-from typing import Type, Optional
-from sqlalchemy.orm import Session
-
 from sqlite.models.users import User
 
 
@@ -13,7 +10,7 @@ class UserRepository:
                  .where(self._model.username == username))
         return query.scalar()
 
-    def get_by_id(self, session: Session, user_id):
+    def get_by_id(self, session, user_id):
         return (session.query(self._model)
                 .where(self._model.id == user_id)).scalar()
 
