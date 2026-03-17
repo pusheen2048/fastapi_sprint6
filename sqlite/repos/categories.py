@@ -1,7 +1,7 @@
 from typing import Type, Optional
 from sqlalchemy.orm import Session
 
-from sqlite.models.users import Category
+from sqlite.models.categories import Category
 
 
 class CategoryRepository:
@@ -12,10 +12,6 @@ class CategoryRepository:
         query = (session.query(self._model)
                  .where(self._model.title == title))
         return query.scalar()
-
-    def get_by_id(self, session, category_id):
-        return (session.query(self._model)
-                .where(self._model.id == category_id)).scalar()
 
     def create(self, session, category):
         session.add(category)

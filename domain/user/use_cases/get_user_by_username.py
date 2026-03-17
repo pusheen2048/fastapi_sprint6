@@ -1,7 +1,8 @@
+from fastapi import HTTPException, status
+
 from sqlite.database import database
 from sqlite.repos.users import UserRepository
 from schemas.users import UserResponse
-from fastapi import HTTPException, status
 
 
 class GetUserByUsernameUseCase:

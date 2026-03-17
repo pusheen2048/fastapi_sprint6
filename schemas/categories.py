@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from datetime import datetime
 
 
@@ -10,9 +10,10 @@ class CategoryBase(BaseModel):
 
 
 class CategoryCreate(CategoryBase):
-    pass
+    model_config = ConfigDict(from_attributes=True)
 
 
 class CategoryResponse(CategoryBase):
     id: int
     created_at: datetime
+    model_config = ConfigDict(from_attributes=True)

@@ -1,5 +1,5 @@
 from fastapi import HTTPException, status
-from datetime import datetim
+from datetime import datetime
 
 from sqlite.repos.users import UserRepository
 from sqlite.models.users import User
@@ -17,8 +17,7 @@ class CreateUserUseCase:
             exists = self._repo.get_by_username(session, data.username)
             if exists:
                 raise HTTPException(status_code=status.HTTP_409_CONFLICT,
-                                    detail="This username already exists"
-                )
+                                    detail="This username already exists")
 
             user = User(first_name=data.first_name,
                         last_name=data.last_name,
@@ -26,6 +25,5 @@ class CreateUserUseCase:
                         password=data.password,
                         email=data.email,
                         created_at=datetime.now())
-
             created = self._repo.create(session, user)
-:            return UserResponse.model_validate(created, from_attributes=True)
+            return UserResponse.model_validate(created, from_attributes=True)
