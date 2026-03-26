@@ -18,3 +18,8 @@ class UserRepository:
         session.add(user)
         session.flush()
         return user
+
+    def delete(self, session, user):
+        session.delete(user)
+        session.commit()
+        session.flush()

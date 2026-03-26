@@ -14,3 +14,8 @@ class CategoryRepository:
         session.add(category)
         session.flush()
         return category
+
+    def delete(self, session, category):
+        session.delete(category)
+        session.commit()
+        session.flush()
