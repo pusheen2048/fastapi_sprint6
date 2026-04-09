@@ -3,7 +3,11 @@ from schemas.categories import CategoryResponse, CategoryCreate
 from domain.category.use_cases.create_category import CreateCategoryUseCase
 from domain.category.use_cases.get_category_by_title import GetCategoryByTitleUseCase
 from domain.category.use_cases.delete_category import DeleteCategoryUseCase
-from api.depends import create_category_use_case, get_category_by_title_use_case, delete_category_use_case
+from api.depends import (
+        create_category_use_case,
+        get_category_by_title_use_case,
+        delete_category_use_case
+)
 from domain.category.exceptions import (
         CategoryNotFoundByTitleException,
         CategoryExistsException

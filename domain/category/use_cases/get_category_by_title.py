@@ -1,5 +1,3 @@
-from fastapi import HTTPException, status
-
 from sqlite.database import database
 from sqlite.repos.categories import CategoryRepository
 from schemas.categories import CategoryResponse
@@ -16,5 +14,5 @@ class GetCategoryByTitleUseCase:
             category = self._repo.get_by_title(session=session, title=title)
             if category is None:
                 raise CategoryNotFoundByTitleException(title)
-        
+
         return CategoryResponse.model_validate(obj=category)

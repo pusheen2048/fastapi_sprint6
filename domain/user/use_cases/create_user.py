@@ -1,4 +1,3 @@
-from fastapi import HTTPException, status
 from datetime import datetime
 
 from sqlite.repos.users import UserRepository

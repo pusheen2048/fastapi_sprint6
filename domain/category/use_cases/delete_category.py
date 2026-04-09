@@ -1,5 +1,3 @@
-from fastapi import HTTPException, status
-
 from sqlite.database import database
 from sqlite.repos.categories import CategoryRepository
 from domain.category.exceptions import CategoryNotFoundByTitleException

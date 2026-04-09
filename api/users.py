@@ -3,7 +3,11 @@ from schemas.users import UserResponse, UserCreate
 from domain.user.use_cases.get_user_by_username import GetUserByUsernameUseCase
 from domain.user.use_cases.create_user import CreateUserUseCase
 from domain.user.use_cases.delete_user import DeleteUserUseCase
-from api.depends import get_user_by_username_use_case, create_user_use_case, delete_user_use_case
+from api.depends import (
+        get_user_by_username_use_case,
+        create_user_use_case,
+        delete_user_use_case
+)
 from domain.user.exceptions import (
         UserNotFoundByUsernameException,
         UserExistsException
@@ -37,7 +41,7 @@ async def create_user(data: UserCreate,
 
 
 @user_router.delete("/user/{username}",
-                  status_code=status.HTTP_204_NO_CONTENT)
+                    status_code=status.HTTP_204_NO_CONTENT)
 async def delete_user(username: str,
                       use_case: DeleteUserUseCase
                       = Depends(delete_user_use_case)):
@@ -45,4 +49,3 @@ async def delete_user(username: str,
         return await use_case.execute(username=username)
     except UserNotFoundByUsernameException as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.get_detail())
-

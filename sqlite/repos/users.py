@@ -12,7 +12,7 @@ class UserRepository:
 
     def get_by_id(self, session, user_id):
         user = (session.query(self._model)
-               .where(self._model.id == user_id))
+                .where(self._model.id == user_id))
         return user.scalar()
 
     def create(self, session, user):
