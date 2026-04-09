@@ -5,6 +5,7 @@ from sqlite.repos.users import UserRepository
 from sqlite.models.users import User
 from sqlite.database import database
 from schemas.users import UserCreate, UserResponse
+from domain.user.exceptions import UserExistsException
 
 
 class CreateUserUseCase:
@@ -14,10 +15,10 @@ class CreateUserUseCase:
 
     async def execute(self, data: UserCreate):
         with self._database.session() as session:
-            exists = self._repo.get_by_username(session, data.username)
+            exists = self._repo.get_by_username(session=session,
+                                                username=data.username)
             if exists:
-                raise HTTPException(status_code=status.HTTP_409_CONFLICT,
-                                    detail="This username already exists")
+                raise UserExistsException(data.username)
             user = User(first_name=data.first_name,
                         last_name=data.last_name,
                         username=data.username,

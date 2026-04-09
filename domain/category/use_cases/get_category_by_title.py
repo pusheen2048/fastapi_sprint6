@@ -3,6 +3,7 @@ from fastapi import HTTPException, status
 from sqlite.database import database
 from sqlite.repos.categories import CategoryRepository
 from schemas.categories import CategoryResponse
+from domain.category.exceptions import CategoryNotFoundByTitleException
 
 
 class GetCategoryByTitleUseCase:
@@ -13,9 +14,7 @@ class GetCategoryByTitleUseCase:
     async def execute(self, title):
         with self._database.session() as session:
             category = self._repo.get_by_title(session=session, title=title)
-        if category is None:
-            raise HTTPException(
-                    status_code=status.HTTP_404_NOT_FOUND,
-                    detail=f"Category with title '{title}' not found"
-                )
+            if category is None:
+                raise CategoryNotFoundByTitleException(title)
+        
         return CategoryResponse.model_validate(obj=category)

@@ -6,13 +6,14 @@ class UserRepository:
         self._model = User
 
     def get_by_username(self, session, username):
-        query = (session.query(self._model)
-                 .where(self._model.username == username))
-        return query.scalar()
+        user = (session.query(self._model)
+                .where(self._model.username == username))
+        return user.scalar()
 
     def get_by_id(self, session, user_id):
-        return (session.query(self._model)
-                .where(self._model.id == user_id)).scalar()
+        user = (session.query(self._model)
+               .where(self._model.id == user_id))
+        return user.scalar()
 
     def create(self, session, user):
         session.add(user)
