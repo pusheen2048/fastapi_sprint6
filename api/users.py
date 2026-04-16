@@ -6,7 +6,8 @@ from domain.user.use_cases.delete_user import DeleteUserUseCase
 from api.depends import (
         get_user_by_username_use_case,
         create_user_use_case,
-        delete_user_use_case
+        delete_user_use_case,
+        get_current_user
 )
 from domain.user.exceptions import (
         UserNotFoundByUsernameException,
@@ -18,7 +19,8 @@ user_router = APIRouter()
 
 @user_router.get("/user/{username}",
                  status_code=status.HTTP_200_OK,
-                 response_model=UserResponse)
+                 response_model=UserResponse, 
+                 dependencies=[Depends(get_current_user)])
 async def get_user_by_username(username: str,
                                use_case: GetUserByUsernameUseCase
                                = Depends(get_user_by_username_use_case)):
@@ -32,10 +34,13 @@ async def get_user_by_username(username: str,
                   status_code=status.HTTP_201_CREATED,
                   response_model=UserResponse)
 async def create_user(data: UserCreate,
-                      use_case: CreateUserUseCase
-                      = Depends(create_user_use_case)):
+                      use_case: CreateUserUseCase=Depends(create_user_use_case),
+                      current_user: UserResponse=Depends(get_current_user)):
+    check_for_admin_access(user=current_user)
     try:
-        return await use_case.execute(data)
+        async with database.session() as session:
+            data.password = get_password_hash(password=data.password)
+            return await use_case.execute(data)
     except UserExistsException as e:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=e.get_detail())
 
@@ -43,8 +48,9 @@ async def create_user(data: UserCreate,
 @user_router.delete("/user/{username}",
                     status_code=status.HTTP_204_NO_CONTENT)
 async def delete_user(username: str,
-                      use_case: DeleteUserUseCase
-                      = Depends(delete_user_use_case)):
+                      use_case: DeleteUserUseCase=Depends(delete_user_use_case),
+                      current_user: UserResponse=Depends(get_current_user)):
+    check_for_admin_access(user=current_user)
     try:
         return await use_case.execute(username=username)
     except UserNotFoundByUsernameException as e:
