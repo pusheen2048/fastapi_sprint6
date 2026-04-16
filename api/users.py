@@ -15,7 +15,7 @@ from domain.user.exceptions import (
         UserExistsException
 )
 from sqlite.database import database
-from resource.auth import get_password_hash
+from core.auth import get_password_hash
 
 user_router = APIRouter()
 
