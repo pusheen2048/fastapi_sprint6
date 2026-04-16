@@ -25,7 +25,8 @@ async def get_category_by_title(title: str,
     try:
         return await use_case.execute(title=title)
     except CategoryNotFoundByTitleException as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.get_detail())
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=e.get_detail())
 
 
 @category_router.post("/category",
@@ -37,7 +38,8 @@ async def create_category(data: CategoryCreate,
     try:
         return await use_case.execute(data)
     except CategoryExistsException as e:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=e.get_detail())
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT,
+                            detail=e.get_detail())
 
 
 @category_router.delete("/category/{title}",
@@ -48,4 +50,5 @@ async def delete_category(title: str,
     try:
         return await use_case.execute(title=title)
     except CategoryNotFoundByTitleException as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.get_detail())
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=e.get_detail())

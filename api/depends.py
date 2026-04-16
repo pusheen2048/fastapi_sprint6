@@ -1,5 +1,5 @@
 from jose import jwt, JWTError
-from fastapi import Depends, HTTPException, status
+from fastapi import HTTPException, status
 
 from domain.user.use_cases.get_user_by_username import GetUserByUsernameUseCase
 from domain.user.use_cases.create_user import CreateUserUseCase
@@ -13,7 +13,6 @@ from core.settings import settings
 from core.exceptions import CredentialsException
 from sqlite.repos.users import UserRepository
 from sqlite.database import Database
-from core.auth import oauth2_scheme
 
 
 def get_user_by_username_use_case() -> GetUserByUsernameUseCase:

@@ -1,16 +1,12 @@
-from typing import Annotated
 from datetime import datetime, timedelta, timezone
 
-from fastapi.security import OAuth2PasswordRequestForm
-from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi import APIRouter, HTTPException, status
 from jose import jwt
 
 from core import settings
 from domain.user.exceptions import UserNotFoundByUsernameException
-from domain.user.use_cases.get_user_by_username import GetUserByUsernameUseCase
 from schemas.auth import Token, AuthCredential
 from sqlite.database import database
-from sqlite.repos.users import UserRepository 
 from core.auth import verify_password
 from .depends import user_repo
 
@@ -22,8 +18,10 @@ auth_router = APIRouter()
 async def login(data: AuthCredential):
     try:
         with database.session() as session:
-            user = user_repo.get_by_username(session=session, username=data.username)
-        if not verify_password(plain_password=data.password, hashed_password=user.password):
+            user = user_repo.get_by_username(session=session,
+                                             username=data.username)
+        if not verify_password(plain_password=data.password,
+                               hashed_password=user.password):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Неверный пароль",
