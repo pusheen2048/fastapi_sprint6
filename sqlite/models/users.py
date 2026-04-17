@@ -15,3 +15,4 @@ class User(Base):
     email: Mapped[str]
     password: Mapped[str] = mapped_column(nullable=False)
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+    is_admin: Mapped[bool] = mapped_column(default=False)

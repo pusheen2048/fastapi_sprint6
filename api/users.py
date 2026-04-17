@@ -1,4 +1,6 @@
 from fastapi import APIRouter, status, Depends, HTTPException
+from fastapi.security import OAuth2PasswordBearer
+
 from schemas.users import UserResponse, UserCreate
 from domain.user.use_cases.get_user_by_username import GetUserByUsernameUseCase
 from domain.user.use_cases.create_user import CreateUserUseCase
@@ -7,7 +9,6 @@ from api.depends import (
         get_user_by_username_use_case,
         create_user_use_case,
         delete_user_use_case,
-        get_current_user,
         check_for_admin_access
 )
 from domain.user.exceptions import (
@@ -18,15 +19,16 @@ from sqlite.database import database
 from core.auth import get_password_hash
 
 user_router = APIRouter()
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 
 @user_router.get("/user/{username}",
                  status_code=status.HTTP_200_OK,
-                 response_model=UserResponse,
-                 dependencies=[Depends(get_current_user)])
+                 response_model=UserResponse)
 async def get_user_by_username(username: str,
                                use_case: GetUserByUsernameUseCase
-                               = Depends(get_user_by_username_use_case)):
+                               = Depends(get_user_by_username_use_case),
+                               token: str = Depends(oauth2_scheme)):
     try:
         return await use_case.execute(username=username)
     except UserNotFoundByUsernameException as e:
@@ -39,8 +41,8 @@ async def get_user_by_username(username: str,
                   response_model=UserResponse)
 async def create_user(data: UserCreate,
                       use_case: CreateUserUseCase = Depends(create_user_use_case),
-                      current_user: UserResponse = Depends(get_current_user)):
-    check_for_admin_access(user=current_user)
+                      token: str = Depends(oauth2_scheme)):
+    check_for_admin_access(token)
     try:
         with database.session():
             data.password = get_password_hash(password=data.password)
@@ -54,8 +56,8 @@ async def create_user(data: UserCreate,
                     status_code=status.HTTP_204_NO_CONTENT)
 async def delete_user(username: str,
                       use_case: DeleteUserUseCase = Depends(delete_user_use_case),
-                      current_user: UserResponse = Depends(get_current_user)):
-    check_for_admin_access(user=current_user)
+                      token: str = Depends(oauth2_scheme)):
+    check_for_admin_access(token)
     try:
         return await use_case.execute(username=username)
     except UserNotFoundByUsernameException as e:

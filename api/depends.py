@@ -45,7 +45,7 @@ database = Database()
 AUTH_EXCEPTION_MESSAGE = "Невозможно проверить данные для авторизации"
 
 
-async def get_current_user(token):
+async def check_for_admin_access(token):
     try:
         payload = jwt.decode(
             token=token,
@@ -59,19 +59,11 @@ async def get_current_user(token):
     except JWTError:
         raise CredentialsException(detail=AUTH_EXCEPTION_MESSAGE)
 
-    async with database.session() as session:
-        user = await user_repo.get_user_by_email(
-            session=session,
-            email=token_data.username,
-        )
-
+    with database.session() as session:
+        user = await user_repo.get_by_username(session=session,
+                                               username=token_data.username)
     if user is None:
         raise CredentialsException(detail=AUTH_EXCEPTION_MESSAGE)
-
-    return user
-
-
-def check_for_admin_access(user: UserResponse):
     if not user.is_admin:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,

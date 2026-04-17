@@ -14,7 +14,7 @@ def create_app():
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    app.include_router(user_router, prefix="/users")
-    app.include_router(category_router, prefix="/categories")
-    app.include_router(auth_router, prefix="/auth")
+    app.include_router(user_router, prefix="/users", tags=["users"])
+    app.include_router(category_router, prefix="/categories", tags=["categories"])
+    app.include_router(auth_router, prefix="/auth", tags=["auth"])
     return app

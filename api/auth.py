@@ -1,9 +1,10 @@
 from datetime import datetime, timedelta, timezone
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi.security import OAuth2PasswordRequestForm
 from jose import jwt
 
-from core import settings
+from core.settings import settings
 from domain.user.exceptions import UserNotFoundByUsernameException
 from schemas.auth import Token, AuthCredential
 from sqlite.database import database
@@ -15,7 +16,7 @@ auth_router = APIRouter()
 
 
 @auth_router.post("/token")
-async def login(data: AuthCredential):
+async def login(data: OAuth2PasswordRequestForm = Depends()):
     try:
         with database.session() as session:
             user = user_repo.get_by_username(session=session,
