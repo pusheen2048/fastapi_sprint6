@@ -1,0 +1,13 @@
+services:
+  app:
+    image: fastapi-app
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    ports:
+      - '127.0.0.1:8080:8000'
+    build:
+      context: .
+    pull_policy: build
+    entrypoint: sh -c "./start.sh"

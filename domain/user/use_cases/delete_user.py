@@ -1,6 +1,9 @@
+import logging
 from sqlite.database import database
 from sqlite.repos.users import UserRepository
 from domain.user.exceptions import UserNotFoundByUsernameException
+
+logger = logging.getLogger(__name__)
 
 
 class DeleteUserUseCase:
@@ -13,5 +16,7 @@ class DeleteUserUseCase:
             user = self._repo.get_by_username(session=session,
                                               username=username)
             if user is None:
+                logger.error(f'Пользователя {username} не существует!')
                 raise UserNotFoundByUsernameException(username)
         self._repo.delete(session, user)
+        logger.info(f'Пользователь {username} с id {user.id} успешно удалён.')

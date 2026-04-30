@@ -1,6 +1,9 @@
+import logging
 from sqlite.database import database
 from sqlite.repos.categories import CategoryRepository
 from domain.category.exceptions import CategoryNotFoundByTitleException
+
+logger = logging.getLogger(__name__)
 
 
 class DeleteCategoryUseCase:
@@ -12,5 +15,7 @@ class DeleteCategoryUseCase:
         with self._database.session() as session:
             category = self._repo.get_by_title(session, title)
             if category is None:
+                logger.error(f'Категории {title} не существует!')
                 raise CategoryNotFoundByTitleException(title)
             self._repo.delete(session, category)
+            logger.info(f'Категория {title} с id {category.id} успешно удалена.')

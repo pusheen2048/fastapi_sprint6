@@ -14,5 +14,4 @@ class GetCategoryByTitleUseCase:
             category = self._repo.get_by_title(session=session, title=title)
             if category is None:
                 raise CategoryNotFoundByTitleException(title)
-
         return CategoryResponse.model_validate(obj=category)

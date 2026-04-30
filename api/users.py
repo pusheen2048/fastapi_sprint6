@@ -42,7 +42,6 @@ async def get_user_by_username(username: str,
 async def create_user(data: UserCreate,
                       use_case: CreateUserUseCase = Depends(create_user_use_case),
                       token: str = Depends(oauth2_scheme)):
-    check_for_admin_access(token)
     try:
         with database.session():
             data.password = get_password_hash(password=data.password)
@@ -57,7 +56,6 @@ async def create_user(data: UserCreate,
 async def delete_user(username: str,
                       use_case: DeleteUserUseCase = Depends(delete_user_use_case),
                       token: str = Depends(oauth2_scheme)):
-    check_for_admin_access(token)
     try:
         return await use_case.execute(username=username)
     except UserNotFoundByUsernameException as e:

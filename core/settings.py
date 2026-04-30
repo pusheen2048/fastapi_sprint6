@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     ROOT_PATH: str
     ENV: str
     LOG_LEVEL: str
+    PORT: int
 
     ACCESS_TOKEN_EXPIRE_MINUTES: int
     SECRET_AUTH_KEY: SecretStr

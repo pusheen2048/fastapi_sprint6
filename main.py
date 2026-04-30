@@ -1,3 +1,4 @@
+import logging
 import asyncio
 import uvicorn
 
@@ -6,6 +7,11 @@ from app import create_app
 
 app = create_app()
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+
 
 @app.on_event("startup")
 def startup():
@@ -13,7 +19,7 @@ def startup():
 
 
 async def run():
-    config = uvicorn.Config("main:app", host="127.0.0.1",
+    config = uvicorn.Config("main:app", host="0.0.0.0",
                             port=8000, reload=False)
     server = uvicorn.Server(config=config)
     tasks = (asyncio.create_task(server.serve()), )
