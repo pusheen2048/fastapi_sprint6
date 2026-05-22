@@ -12,7 +12,6 @@ from domain.post.use_cases.create_post import CreatePostUseCase
 from domain.post.use_cases.delete_post import DeletePostUseCase
 from domain.post.use_cases.upload_image import UploadImageUseCase
 from schemas.auth import TokenData
-from schemas.users import UserResponse
 from core.settings import settings
 from core.exceptions import CredentialsException
 from sqlite.repos.users import UserRepository

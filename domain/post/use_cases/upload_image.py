@@ -3,7 +3,7 @@ import logging
 from sqlite.repos.posts import PostRepository
 from sqlite.database import database
 from schemas.posts import PostResponse
-from domain.post.exceptions import PostNotFoundByTitleException 
+from domain.post.exceptions import PostNotFoundByTitleException
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +19,6 @@ class UploadImageUseCase:
             if not post:
                 logger.error(f'Пост {title} не найден!')
                 raise PostNotFoundByTitleException(title)
-            
             post.image_path = image_path
             session.commit()
             session.refresh(post)

@@ -9,7 +9,6 @@ from api.depends import (
         get_user_by_username_use_case,
         create_user_use_case,
         delete_user_use_case,
-        check_for_admin_access
 )
 from domain.user.exceptions import (
         UserNotFoundByUsernameException,
