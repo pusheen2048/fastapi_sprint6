@@ -21,6 +21,8 @@ async def login(data: OAuth2PasswordRequestForm = Depends()):
         with database.session() as session:
             user = user_repo.get_by_username(session=session,
                                              username=data.username)
+            if user is None:
+                raise UserNotFoundByUsernameException(data.username)
         if not verify_password(plain_password=data.password,
                                hashed_password=user.password):
             raise HTTPException(
@@ -31,7 +33,7 @@ async def login(data: OAuth2PasswordRequestForm = Depends()):
     except UserNotFoundByUsernameException as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=e.message,
+            detail=e.detail,
             headers={"WWW-Authenticate": "Bearer"},
         )
 

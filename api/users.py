@@ -40,8 +40,8 @@ async def get_user_by_username(username: str,
                   status_code=status.HTTP_201_CREATED,
                   response_model=UserResponse)
 async def create_user(data: UserCreate,
-                      use_case: CreateUserUseCase = Depends(create_user_use_case),
-                      token: str = Depends(oauth2_scheme)):
+                      use_case: CreateUserUseCase = Depends(create_user_use_case)):
+                      #token: str = Depends(oauth2_scheme)):
     try:
         with database.session():
             data.password = get_password_hash(password=data.password)

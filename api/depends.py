@@ -7,6 +7,10 @@ from domain.user.use_cases.delete_user import DeleteUserUseCase
 from domain.category.use_cases.get_category_by_title import GetCategoryByTitleUseCase
 from domain.category.use_cases.create_category import CreateCategoryUseCase
 from domain.category.use_cases.delete_category import DeleteCategoryUseCase
+from domain.post.use_cases.get_post_by_title import GetPostByTitleUseCase
+from domain.post.use_cases.create_post import CreatePostUseCase
+from domain.post.use_cases.delete_post import DeletePostUseCase
+from domain.post.use_cases.upload_image import UploadImageUseCase
 from schemas.auth import TokenData
 from schemas.users import UserResponse
 from core.settings import settings
@@ -37,6 +41,22 @@ def create_category_use_case() -> CreateCategoryUseCase:
 
 def delete_category_use_case() -> DeleteCategoryUseCase:
     return DeleteCategoryUseCase()
+
+
+def get_post_by_title_use_case() -> GetPostByTitleUseCase:
+    return GetPostByTitleUseCase()
+
+
+def create_post_use_case() -> CreatePostUseCase:
+    return CreatePostUseCase()
+
+
+def delete_post_use_case() -> DeletePostUseCase:
+    return DeletePostUseCase()
+
+
+def upload_image_use_case() -> UploadImageUseCase:
+    return UploadImageUseCase()
 
 
 user_repo = UserRepository()
