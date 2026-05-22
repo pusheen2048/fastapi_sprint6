@@ -1,7 +1,7 @@
+from domain.user.exceptions import UserNotFoundByUsernameException
+from schemas.users import UserResponse
 from sqlite.database import database
 from sqlite.repos.users import UserRepository
-from schemas.users import UserResponse
-from domain.user.exceptions import UserNotFoundByUsernameException
 
 
 class GetUserByUsernameUseCase:

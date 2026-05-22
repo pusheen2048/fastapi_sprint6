@@ -1,7 +1,7 @@
+from domain.category.exceptions import CategoryNotFoundByTitleException
+from schemas.categories import CategoryResponse
 from sqlite.database import database
 from sqlite.repos.categories import CategoryRepository
-from schemas.categories import CategoryResponse
-from domain.category.exceptions import CategoryNotFoundByTitleException
 
 
 class GetCategoryByTitleUseCase:

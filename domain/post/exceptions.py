@@ -6,13 +6,7 @@ class BaseException(Exception):
         return self.detail
 
 
-class PostNotFoundByTitleException(BaseException):
-    def __init__(self, title):
-        text = f'Пост с названием {title} не найден'
-        super().__init__(text)
-
-
-class PostExistsException(BaseException):
-    def __init__(self, title):
-        text = f'Пост с названием {title} уже существует'
+class PostNotFoundByIdException(BaseException):
+    def __init__(self, post_id):
+        text = f'Пост с id {post_id} не найден'
         super().__init__(text)

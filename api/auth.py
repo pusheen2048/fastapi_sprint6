@@ -1,15 +1,15 @@
 from datetime import datetime, timedelta, timezone
 
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
 from jose import jwt
 
+from api.depends import user_repo
 from core.auth import verify_password
 from core.settings import settings
 from domain.user.exceptions import UserNotFoundByUsernameException
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordRequestForm
 from schemas.auth import Token
 from sqlite.database import database
-from api.depends import user_repo
 
 auth_router = APIRouter()
 

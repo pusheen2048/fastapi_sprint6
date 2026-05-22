@@ -1,11 +1,11 @@
 import logging
 from datetime import datetime
 
-from sqlite.repos.categories import CategoryRepository
-from sqlite.models.categories import Category
-from sqlite.database import database
-from schemas.categories import CategoryCreate, CategoryResponse
 from domain.category.exceptions import CategoryExistsException
+from schemas.categories import CategoryCreate, CategoryResponse
+from sqlite.database import database
+from sqlite.models.categories import Category
+from sqlite.repos.categories import CategoryRepository
 
 logger = logging.getLogger(__name__)
 

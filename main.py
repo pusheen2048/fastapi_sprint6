@@ -1,9 +1,10 @@
-import logging
 import asyncio
+import logging
+
 import uvicorn
 
-from sqlite.database import database, Base
 from app import create_app
+from sqlite.database import Base, database
 
 app = create_app()
 

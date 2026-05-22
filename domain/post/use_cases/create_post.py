@@ -1,11 +1,10 @@
 import logging
 from datetime import datetime
 
-from sqlite.repos.posts import PostRepository
-from sqlite.models.posts import Post
-from sqlite.database import database
 from schemas.posts import PostCreate, PostResponse
-from domain.post.exceptions import PostExistsException
+from sqlite.database import database
+from sqlite.models.posts import Post
+from sqlite.repos.posts import PostRepository
 
 logger = logging.getLogger(__name__)
 
@@ -17,11 +16,6 @@ class CreatePostUseCase:
 
     async def execute(self, data: PostCreate):
         with self._database.session() as session:
-            exists = self._repo.get_by_title(session=session,
-                                             title=data.title)
-            if exists:
-                logger.error(f'Пост {data.title} уже существует!')
-                raise PostExistsException(data.title)
             post = Post(title=data.title,
                         text=data.text,
                         is_published=data.is_published,

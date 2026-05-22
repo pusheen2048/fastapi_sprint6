@@ -1,7 +1,8 @@
 import logging
+
+from domain.category.exceptions import CategoryNotFoundByTitleException
 from sqlite.database import database
 from sqlite.repos.categories import CategoryRepository
-from domain.category.exceptions import CategoryNotFoundByTitleException
 
 logger = logging.getLogger(__name__)
 

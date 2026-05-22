@@ -5,9 +5,9 @@ class PostRepository:
     def __init__(self):
         self._model = Post
 
-    def get_by_title(self, session, title):
+    def get_by_id(self, session, id):
         query = (session.query(self._model)
-                 .where(self._model.title == title))
+                 .where(self._model.id == id))
         return query.scalar()
 
     def create(self, session, post):

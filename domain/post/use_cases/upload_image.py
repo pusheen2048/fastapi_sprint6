@@ -1,9 +1,9 @@
 import logging
 
-from sqlite.repos.posts import PostRepository
-from sqlite.database import database
+from domain.post.exceptions import PostNotFoundByIdException
 from schemas.posts import PostResponse
-from domain.post.exceptions import PostNotFoundByTitleException
+from sqlite.database import database
+from sqlite.repos.posts import PostRepository
 
 logger = logging.getLogger(__name__)
 
@@ -13,14 +13,14 @@ class UploadImageUseCase:
         self._database = database
         self._repo = PostRepository()
 
-    async def execute(self, title: str, image_path: str):
+    async def execute(self, post_id: int, image_path: str):
         with self._database.session() as session:
-            post = self._repo.get_by_title(session=session, title=title)
+            post = self._repo.get_by_id(session=session, id=post_id)
             if not post:
-                logger.error(f'Пост {title} не найден!')
-                raise PostNotFoundByTitleException(title)
+                logger.error(f'Пост с id {post_id} не найден!')
+                raise PostNotFoundByTitleException(post_id)
             post.image_path = image_path
             session.commit()
             session.refresh(post)
-            logger.info(f'Картинка для поста {title} успешно обновлена.')
+            logger.info(f'Картинка для поста с id {post_id} успешно обновлена.')
             return PostResponse.model_validate(post, from_attributes=True)

@@ -1,8 +1,8 @@
 from datetime import datetime
 from typing import Optional
-from sqlalchemy import func
-from sqlalchemy import ForeignKey
-from sqlalchemy.orm import relationship, Mapped, mapped_column
+
+from sqlalchemy import ForeignKey, func
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from sqlite.database import Base
 

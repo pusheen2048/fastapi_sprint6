@@ -1,11 +1,11 @@
 import logging
 from datetime import datetime
 
-from sqlite.repos.users import UserRepository
-from sqlite.models.users import User
-from sqlite.database import database
-from schemas.users import UserCreate, UserResponse
 from domain.user.exceptions import UserExistsException
+from schemas.users import UserCreate, UserResponse
+from sqlite.database import database
+from sqlite.models.users import User
+from sqlite.repos.users import UserRepository
 
 logger = logging.getLogger(__name__)
 

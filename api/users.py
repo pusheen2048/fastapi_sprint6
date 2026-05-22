@@ -1,21 +1,15 @@
-from fastapi import APIRouter, status, Depends, HTTPException
-from fastapi.security import OAuth2PasswordBearer
-
-from schemas.users import UserResponse, UserCreate
-from domain.user.use_cases.get_user_by_username import GetUserByUsernameUseCase
+from api.depends import (create_user_use_case, delete_user_use_case,
+                         get_user_by_username_use_case)
+from core.auth import get_password_hash
+from domain.user.exceptions import (UserExistsException,
+                                    UserNotFoundByUsernameException)
 from domain.user.use_cases.create_user import CreateUserUseCase
 from domain.user.use_cases.delete_user import DeleteUserUseCase
-from api.depends import (
-        get_user_by_username_use_case,
-        create_user_use_case,
-        delete_user_use_case,
-)
-from domain.user.exceptions import (
-        UserNotFoundByUsernameException,
-        UserExistsException
-)
+from domain.user.use_cases.get_user_by_username import GetUserByUsernameUseCase
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+from schemas.users import UserCreate, UserResponse
 from sqlite.database import database
-from core.auth import get_password_hash
 
 user_router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
@@ -40,7 +34,6 @@ async def get_user_by_username(username: str,
                   response_model=UserResponse)
 async def create_user(data: UserCreate,
                       use_case: CreateUserUseCase = Depends(create_user_use_case)):
-                      #token: str = Depends(oauth2_scheme)):
     try:
         with database.session():
             data.password = get_password_hash(password=data.password)
