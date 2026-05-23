@@ -1,3 +1,4 @@
+from api.auth import get_current_user
 from api.depends import (create_user_use_case, delete_user_use_case,
                          get_user_by_username_use_case)
 from core.auth import get_password_hash
@@ -47,8 +48,11 @@ async def create_user(data: UserCreate,
                     status_code=status.HTTP_204_NO_CONTENT)
 async def delete_user(username: str,
                       use_case: DeleteUserUseCase = Depends(delete_user_use_case),
-                      token: str = Depends(oauth2_scheme)):
+                      current_user = Depends(get_current_user)):
     try:
+        if current_user.username != username:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
+                                detail="Нельзя удалить чужой аккаунт!")
         return await use_case.execute(username=username)
     except UserNotFoundByUsernameException as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,

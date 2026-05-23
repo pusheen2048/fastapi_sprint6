@@ -1,10 +1,10 @@
-from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from api.auth import auth_router
 from api.categories import category_router
 from api.posts import posts_router
 from api.users import user_router
+from fastapi import FastAPI
 
 
 def create_app():

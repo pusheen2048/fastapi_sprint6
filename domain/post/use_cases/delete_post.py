@@ -1,6 +1,7 @@
 import logging
 
-from domain.post.exceptions import PostNotFoundByIdException
+from domain.post.exceptions import (PostDeleteForbiddenException,
+                                    PostNotFoundByIdException)
 from sqlite.database import database
 from sqlite.repos.posts import PostRepository
 
@@ -12,11 +13,13 @@ class DeletePostUseCase:
         self._database = database
         self._repo = PostRepository()
 
-    async def execute(self, post_id):
+    async def execute(self, post_id, user_id):
         with self._database.session() as session:
             post = self._repo.get_by_id(session, post_id)
             if post is None:
                 logger.error(f'Поста с id {post_id} не существует!')
                 raise PostNotFoundByIdException(post_id)
+            if post.author_id != user_id:
+                raise PostDeleteForbiddenException(post_id)
             self._repo.delete(session, post)
             logger.info(f'Пост с id {post.id} успешно удалён.')

@@ -14,7 +14,6 @@ class PostBase(BaseModel):
 
 
 class PostCreate(PostBase):
-    author_id: int
     category_id: Optional[int] = None
     model_config = ConfigDict(from_attributes=True)
 

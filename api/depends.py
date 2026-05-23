@@ -61,31 +61,3 @@ def upload_image_use_case() -> UploadImageUseCase:
 
 user_repo = UserRepository()
 database = Database()
-
-AUTH_EXCEPTION_MESSAGE = "Невозможно проверить данные для авторизации"
-
-
-async def check_for_admin_access(token):
-    try:
-        payload = jwt.decode(
-            token=token,
-            key=settings.SECRET_AUTH_KEY.get_secret_value(),
-            algorithms=[settings.AUTH_ALGORITHM],
-        )
-        username = payload.get("sub")
-        if username is None:
-            raise CredentialsException(detail=AUTH_EXCEPTION_MESSAGE)
-        token_data = TokenData(username=username)
-    except JWTError:
-        raise CredentialsException(detail=AUTH_EXCEPTION_MESSAGE)
-
-    with database.session() as session:
-        user = await user_repo.get_by_username(session=session,
-                                               username=token_data.username)
-    if user is None:
-        raise CredentialsException(detail=AUTH_EXCEPTION_MESSAGE)
-    if not user.is_admin:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Только админ имеет права добавлять/изменять/удалять пользователей"
-        )

@@ -16,6 +16,11 @@ class UserCreate(UserBase):
     model_config = ConfigDict(from_attributes=True)
 
 
+class CurrentUser(UserBase):
+    username: str
+    id: int
+
+
 class UserResponse(UserBase):
     id: int
     model_config = ConfigDict(from_attributes=True)

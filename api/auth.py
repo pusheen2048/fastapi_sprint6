@@ -1,17 +1,19 @@
 from datetime import datetime, timedelta, timezone
 
-from jose import jwt
+from jose import JWTError, jwt
 
 from api.depends import user_repo
 from core.auth import verify_password
 from core.settings import settings
 from domain.user.exceptions import UserNotFoundByUsernameException
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from schemas.auth import Token
+from schemas.users import CurrentUser
 from sqlite.database import database
 
 auth_router = APIRouter()
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 
 @auth_router.post("/token")
@@ -37,7 +39,7 @@ async def login(data: OAuth2PasswordRequestForm = Depends()):
         )
 
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    token_data = {"sub": user.username}
+    token_data = {"sub": user.username, "user_id": user.id}
 
     to_encode = token_data.copy()
     if access_token_expires:
@@ -52,3 +54,25 @@ async def login(data: OAuth2PasswordRequestForm = Depends()):
         algorithm=settings.AUTH_ALGORITHM,
     )
     return Token(access_token=access_token, token_type="bearer")
+
+
+async def get_current_user(token: str = Depends(oauth2_scheme)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Не удалось валидировать токен",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(
+            token,
+            settings.SECRET_AUTH_KEY.get_secret_value(),
+            algorithms=[settings.AUTH_ALGORITHM]
+        )
+        user_id = payload.get("user_id")
+        username = payload.get("sub")
+        print(user_id, username)
+        if user_id is None:
+            raise credentials_exception
+        return CurrentUser(id=user_id, username=username)
+    except JWTError:
+        raise credentials_exception

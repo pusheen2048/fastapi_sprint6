@@ -18,7 +18,7 @@ class UploadImageUseCase:
             post = self._repo.get_by_id(session=session, id=post_id)
             if not post:
                 logger.error(f'Пост с id {post_id} не найден!')
-                raise PostNotFoundByTitleException(post_id)
+                raise PostNotFoundByIdException(post_id)
             post.image_path = image_path
             session.commit()
             session.refresh(post)
