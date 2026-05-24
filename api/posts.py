@@ -5,7 +5,9 @@ from uuid import uuid4
 from api.auth import get_current_user
 from api.depends import (create_post_use_case, delete_post_use_case,
                          get_post_by_id_use_case, upload_image_use_case)
+from domain.category.exceptions import CategoryNotFoundByIdException
 from domain.post.exceptions import (PostDeleteForbiddenException,
+                                    PostEditForbiddenException,
                                     PostNotFoundByIdException)
 from domain.post.use_cases.create_post import CreatePostUseCase
 from domain.post.use_cases.delete_post import DeletePostUseCase
@@ -21,20 +23,6 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 UPLOAD_DIR = os.path.join('uploads', 'posts')
 
 
-@posts_router.get("/post/{post_id}",
-                  status_code=status.HTTP_200_OK,
-                  response_model=PostResponse)
-async def get_post_by_id(post_id: int,
-                         use_case: GetPostByIdUseCase
-                         = Depends(get_post_by_id_use_case),
-                         token: str = Depends(oauth2_scheme)):
-    try:
-        return await use_case.execute(post_id=post_id)
-    except PostNotFoundByIdException as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=e.get_detail())
-
-
 @posts_router.post("/post",
                    status_code=status.HTTP_201_CREATED,
                    response_model=PostResponse)
@@ -44,7 +32,23 @@ async def create_post(data: PostCreate,
                       current_user = Depends(get_current_user)):
     try:
         return await use_case.execute(data, user_id=current_user.id)
+
     except CategoryNotFoundByIdException as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=e.get_detail())
+
+
+@posts_router.get("/post/{post_id}",
+                  status_code=status.HTTP_200_OK,
+                  response_model=PostResponse)
+async def get_post_by_id(post_id: int,
+                         use_case: GetPostByIdUseCase
+                         = Depends(get_post_by_id_use_case),
+                         token: str = Depends(oauth2_scheme)):
+    try:
+        return await use_case.execute(post_id=post_id)
+
+    except PostNotFoundByIdException as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=e.get_detail())
 
@@ -55,7 +59,7 @@ async def create_post(data: PostCreate,
 async def upload_post_image(post_id: int,
                             file: UploadFile = File(...),
                             use_case: UploadImageUseCase = Depends(upload_image_use_case),
-                            token: str = Depends(oauth2_scheme)):
+                            current_user = Depends(get_current_user)):
     if not file.content_type.startswith("image/"):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail="Файл не является изображением.")
@@ -66,10 +70,14 @@ async def upload_post_image(post_id: int,
     try:
         with open(path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
-            return await use_case.execute(post_id=post_id, image_path=path)
+            return await use_case.execute(post_id=post_id, user=current_user,
+                                          image_path=path)
 
     except PostNotFoundByIdException as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.get_detail())
+    except PostEditForbiddenException as e:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
+                            detail=e.get_detail())
 
 
 @posts_router.get("/post/image/{post_id}", status_code=status.HTTP_200_OK)
@@ -87,7 +95,8 @@ async def get_post_image(post_id: int,
         return FileResponse(post.image_path)
 
     except PostNotFoundByIdException as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.get_detail())
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=e.get_detail())
 
 
 @posts_router.delete("/posts/{post_id}",
@@ -97,7 +106,7 @@ async def delete_post(post_id: int,
                       = Depends(delete_post_use_case),
                       current_user = Depends(get_current_user)):
     try:
-        return await use_case.execute(post_id=post_id, user_id=current_user.id)
+        return await use_case.execute(post_id=post_id, user=current_user)
 
     except PostNotFoundByIdException as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,

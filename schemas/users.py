@@ -8,7 +8,6 @@ class UserBase(BaseModel):
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     email: Optional[EmailStr] = None
-    is_admin: bool = False
 
 
 class UserCreate(UserBase):
@@ -16,11 +15,13 @@ class UserCreate(UserBase):
     model_config = ConfigDict(from_attributes=True)
 
 
+class UserResponse(UserBase):
+    id: int
+    is_admin: bool
+    model_config = ConfigDict(from_attributes=True)
+
+
 class CurrentUser(UserBase):
     username: str
     id: int
-
-
-class UserResponse(UserBase):
-    id: int
-    model_config = ConfigDict(from_attributes=True)
+    is_admin: bool

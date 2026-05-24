@@ -31,13 +31,13 @@ async def login(data: OAuth2PasswordRequestForm = Depends()):
                 detail="Неверный пароль",
                 headers={"WWW-Authenticate": "Bearer"},
             )
+
     except UserNotFoundByUsernameException as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=e.detail,
             headers={"WWW-Authenticate": "Bearer"},
         )
-
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     token_data = {"sub": user.username, "user_id": user.id}
 
@@ -45,7 +45,8 @@ async def login(data: OAuth2PasswordRequestForm = Depends()):
     if access_token_expires:
         expire = datetime.now(timezone.utc) + access_token_expires
     else:
-        expire = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        expire = datetime.now(timezone.utc) + \
+                timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
 
     to_encode.update({"exp": expire})
     access_token = jwt.encode(

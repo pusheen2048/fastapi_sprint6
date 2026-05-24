@@ -8,3 +8,5 @@ WORKDIR /app
 RUN pip install -r ./requirements.txt
 RUN chmod +x ./start.sh
 EXPOSE 8000
+
+CMD ["./start.sh"]

@@ -10,6 +10,11 @@ class CategoryRepository:
                  .where(self._model.title == title))
         return query.scalar()
 
+    def get_by_id(self, session, id):
+        query = (session.query(self._model)
+                 .where(self._model.id == id))
+        return query.scalar()
+
     def create(self, session, category):
         session.add(category)
         session.flush()

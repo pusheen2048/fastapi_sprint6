@@ -16,20 +16,6 @@ user_router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 
-@user_router.get("/user/{username}",
-                 status_code=status.HTTP_200_OK,
-                 response_model=UserResponse)
-async def get_user_by_username(username: str,
-                               use_case: GetUserByUsernameUseCase
-                               = Depends(get_user_by_username_use_case),
-                               token: str = Depends(oauth2_scheme)):
-    try:
-        return await use_case.execute(username=username)
-    except UserNotFoundByUsernameException as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=e.get_detail())
-
-
 @user_router.post("/user",
                   status_code=status.HTTP_201_CREATED,
                   response_model=UserResponse)
@@ -44,13 +30,27 @@ async def create_user(data: UserCreate,
                             detail=e.get_detail())
 
 
+@user_router.get("/user/{username}",
+                 status_code=status.HTTP_200_OK,
+                 response_model=UserResponse)
+async def get_user_by_username(username: str,
+                               use_case: GetUserByUsernameUseCase
+                               = Depends(get_user_by_username_use_case),
+                               token: str = Depends(oauth2_scheme)):
+    try:
+        return await use_case.execute(username=username)
+    except UserNotFoundByUsernameException as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=e.get_detail())
+
+
 @user_router.delete("/user/{username}",
                     status_code=status.HTTP_204_NO_CONTENT)
 async def delete_user(username: str,
                       use_case: DeleteUserUseCase = Depends(delete_user_use_case),
                       current_user = Depends(get_current_user)):
     try:
-        if current_user.username != username:
+        if current_user.username != username and not current_user.is_admin:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
                                 detail="Нельзя удалить чужой аккаунт!")
         return await use_case.execute(username=username)
