@@ -52,7 +52,7 @@ async def delete_user(username: str,
     try:
         if current_user.username != username and not current_user.is_admin:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
-                                detail="Нельзя удалить чужой аккаунт!")
+                                detail="Нельзя удалить чужой аккаунт.")
         return await use_case.execute(username=username)
     except UserNotFoundByUsernameException as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,

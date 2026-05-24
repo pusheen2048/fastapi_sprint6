@@ -39,7 +39,7 @@ async def login(data: OAuth2PasswordRequestForm = Depends()):
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    token_data = {"sub": user.username, "user_id": user.id}
+    token_data = {"sub": user.username, "user_id": user.id, "is_admin": user.is_admin}
 
     to_encode = token_data.copy()
     if access_token_expires:
@@ -71,9 +71,9 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         )
         user_id = payload.get("user_id")
         username = payload.get("sub")
-        print(user_id, username)
+        is_admin = payload.get("is_admin")
         if user_id is None:
             raise credentials_exception
-        return CurrentUser(id=user_id, username=username)
+        return CurrentUser(id=user_id, username=username, is_admin=is_admin)
     except JWTError:
         raise credentials_exception

@@ -8,11 +8,11 @@ class BaseException(Exception):
 
 class UserNotFoundByUsernameException(BaseException):
     def __init__(self, username):
-        text = f'Пользователь с логином {username} не найден'
+        text = f'Пользователь с логином {username} не найден.'
         super().__init__(text)
 
 
 class UserExistsException(BaseException):
     def __init__(self, username):
-        text = f'Пользователь с логином {username} уже существует'
+        text = f'Пользователь с логином {username} уже существует.'
         super().__init__(text)

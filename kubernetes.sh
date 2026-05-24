@@ -3,4 +3,5 @@ eval $(minikube docker-env)
 docker build -t fastapi-app:latest .
 kubectl apply -f kubernetes-conf.yaml
 kubectl rollout restart deployment fastapi-deployment
+sleep 30
 firefox "$(minikube service fastapi-service --url)/docs"
