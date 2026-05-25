@@ -1,8 +1,8 @@
 import logging
 
 from domain.user.exceptions import UserNotFoundByUsernameException
-from sqlite.database import database
-from sqlite.repos.users import UserRepository
+from infrastructure.database import database
+from infrastructure.repos.users import UserRepository
 
 logger = logging.getLogger(__name__)
 

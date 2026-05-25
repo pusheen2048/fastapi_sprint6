@@ -2,11 +2,11 @@ import logging
 from datetime import datetime
 
 from domain.category.exceptions import CategoryNotFoundByIdException
+from infrastructure.database import database
+from infrastructure.models.posts import Post
+from infrastructure.repos.categories import CategoryRepository
+from infrastructure.repos.posts import PostRepository
 from schemas.posts import PostCreate, PostResponse
-from sqlite.database import database
-from sqlite.models.posts import Post
-from sqlite.repos.categories import CategoryRepository
-from sqlite.repos.posts import PostRepository
 
 logger = logging.getLogger(__name__)
 

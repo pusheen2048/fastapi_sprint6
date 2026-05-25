@@ -1,4 +1,4 @@
-from sqlite.models.users import User
+from infrastructure.models.users import User
 
 
 class UserRepository:

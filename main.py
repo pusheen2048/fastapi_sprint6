@@ -4,7 +4,7 @@ import logging
 import uvicorn
 
 from app import create_app
-from sqlite.database import Base, database
+from infrastructure.database import Base, database
 
 app = create_app()
 

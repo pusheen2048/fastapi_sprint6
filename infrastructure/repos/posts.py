@@ -1,4 +1,4 @@
-from sqlite.models.posts import Post
+from infrastructure.models.posts import Post
 
 
 class PostRepository:

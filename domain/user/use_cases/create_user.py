@@ -2,10 +2,10 @@ import logging
 from datetime import datetime
 
 from domain.user.exceptions import UserExistsException
+from infrastructure.database import database
+from infrastructure.models.users import User
+from infrastructure.repos.users import UserRepository
 from schemas.users import UserCreate, UserResponse
-from sqlite.database import database
-from sqlite.models.users import User
-from sqlite.repos.users import UserRepository
 
 logger = logging.getLogger(__name__)
 

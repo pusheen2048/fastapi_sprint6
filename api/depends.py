@@ -10,8 +10,8 @@ from domain.post.use_cases.upload_image import UploadImageUseCase
 from domain.user.use_cases.create_user import CreateUserUseCase
 from domain.user.use_cases.delete_user import DeleteUserUseCase
 from domain.user.use_cases.get_user_by_username import GetUserByUsernameUseCase
-from sqlite.database import Database
-from sqlite.repos.users import UserRepository
+from infrastructure.database import Database
+from infrastructure.repos.users import UserRepository
 
 user_repo = UserRepository()
 database = Database()

@@ -4,24 +4,26 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+from core.settings import settings
+
 
 class Database:
     def __init__(self):
-        self._db_url = "sqlite:///./db.sqlite"
-        self._engine = create_engine(self._db_url)
-
+        self._db_url = settings.DATABASE_URL
+        self._engine = create_engine(self._db_url, pool_pre_ping=True)
+        self._session_factory = sessionmaker(bind=self._engine,
+                                             expire_on_commit=False)
     @contextmanager
     def session(self):
-        connection = self._engine.connect()
-        Session = sessionmaker(bind=self._engine)
-        session = Session()
+        session = self._session_factory()
         try:
             yield session
             session.commit()
-            connection.close()
         except Exception:
             session.rollback()
             raise
+        finally:
+            session.close()
 
 
 database = Database()

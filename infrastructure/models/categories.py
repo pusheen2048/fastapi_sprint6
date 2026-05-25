@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from sqlite.database import Base
+from infrastructure.database import Base
 
 
 class Category(Base):

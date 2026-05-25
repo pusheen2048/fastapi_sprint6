@@ -1,4 +1,4 @@
-from sqlite.models.categories import Category
+from infrastructure.models.categories import Category
 
 
 class CategoryRepository:

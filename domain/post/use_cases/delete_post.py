@@ -2,8 +2,8 @@ import logging
 
 from domain.post.exceptions import (PostDeleteForbiddenException,
                                     PostNotFoundByIdException)
-from sqlite.database import database
-from sqlite.repos.posts import PostRepository
+from infrastructure.database import database
+from infrastructure.repos.posts import PostRepository
 
 logger = logging.getLogger(__name__)
 

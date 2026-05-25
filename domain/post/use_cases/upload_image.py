@@ -2,9 +2,9 @@ import logging
 
 from domain.post.exceptions import (PostEditForbiddenException,
                                     PostNotFoundByIdException)
+from infrastructure.database import database
+from infrastructure.repos.posts import PostRepository
 from schemas.posts import PostResponse
-from sqlite.database import database
-from sqlite.repos.posts import PostRepository
 
 logger = logging.getLogger(__name__)
 

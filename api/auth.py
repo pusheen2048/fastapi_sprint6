@@ -8,9 +8,9 @@ from core.settings import settings
 from domain.user.exceptions import UserNotFoundByUsernameException
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from infrastructure.database import database
 from schemas.auth import Token
 from schemas.users import CurrentUser
-from sqlite.database import database
 
 auth_router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")

@@ -2,7 +2,6 @@ from logging.config import fileConfig
 
 from alembic import context
 from sqlalchemy import engine_from_config, pool
-
 from sqlite.models.categories import *
 from sqlite.models.posts import *
 from sqlite.models.users import *

@@ -2,10 +2,10 @@ import logging
 from datetime import datetime
 
 from domain.category.exceptions import CategoryExistsException
+from infrastructure.database import database
+from infrastructure.models.categories import Category
+from infrastructure.repos.categories import CategoryRepository
 from schemas.categories import CategoryCreate, CategoryResponse
-from sqlite.database import database
-from sqlite.models.categories import Category
-from sqlite.repos.categories import CategoryRepository
 
 logger = logging.getLogger(__name__)
 

@@ -9,8 +9,8 @@ from domain.user.use_cases.delete_user import DeleteUserUseCase
 from domain.user.use_cases.get_user_by_username import GetUserByUsernameUseCase
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
+from infrastructure.database import database
 from schemas.users import UserCreate, UserResponse
-from sqlite.database import database
 
 user_router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
